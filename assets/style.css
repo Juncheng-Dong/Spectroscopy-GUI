@@ -1,0 +1,59 @@
+.button:hover {
+    /* transform: scale(1.1); */
+    background-color: royalblue;
+    color:white;
+    border:0.2em solid lightblue;
+}
+
+.button{
+    transition: all 0.5s;
+    background-color: lightblue;
+    border:0.2em solid gray;
+    border-radius: 1em;
+}
+
+button:focus{
+    outline:none;
+}
+
+#epsilon-button-content{
+    border:0.2em solid lightblue;
+    border-radius: 0.5em;
+    color:white;
+    text-align: center;
+    padding:0.2em;
+    font-size: 1.5em;
+}
+
+#epsilon-control{
+    border:0.5em solid grey;
+    border-radius: 0.5em;
+    background-color: grey;
+    /* color:white; */
+    width:48%;
+}
+
+#mu-button-content{
+    border:0.2em solid lightblue;
+    border-radius: 0.5em;
+    color:white;
+    text-align: center;
+    padding:0.2em;
+    font-size: 1.5em;
+}
+
+#mu-control{
+    border:0.5em solid grey;
+    border-radius: 0.5em;
+    background-color: grey;
+    /* color:white; */
+    width:48%;
+}
+
+#control-area{
+    display:flex;
+    justify-content: space-evenly;
+}
+.slider{
+    margin-top: 1em;
+}
