@@ -58,7 +58,8 @@ parameters={
     "epsilon_num_lor":num_lor,
     "mu_num_lor":num_lor,
     "nclick-epsilon":None,
-    "nclick-mu":None
+    "nclick-mu":None,
+    "num_spectra":2001
 }
 #generate equally separated points from 1THz to 5THz
 w=np.linspace(freq_low,freq_high,2001)
@@ -110,7 +111,7 @@ epsilon_slider_area_left = html.Div(id='epsilon-slider-area',className='slider',
             }
         ),
         html.Div(id='epsilon-ws-slider-content',children=[],style={"text-align":"center","font-size":"1.5em"})
-    ],style={"width":"50%","float":"left"})
+    ])
 
 epsilon_slider_area_right=html.Div(className='slider',children=[
     dcc.Slider(
@@ -130,12 +131,12 @@ epsilon_slider_area_right=html.Div(className='slider',children=[
     dcc.Dropdown(
         id='epsilon-index-dd',
         options=[{'label': k+1, 'value': k} for k in range(num_lor)],
-        value=0
+        value=0,style={"color":"black"}
     ),
 
-    html.Button("Add 1 more Lorentzian",id='epsilon-add-button',className='button',style={"display":"inline-block","font-size":"1.5em","margin":"1em","width":"90%","padding":"0.5em"})
+    html.Button("Add",id='epsilon-add-button',className='button',style={"display":"block","font-size":"1.5em","width":"80%","padding":"0.5em"})
     
-],style={"width":"50%","float":"right"})
+])
 
 @app.callback(
     Output(component_id='epsilon-slider-area',component_property='children'),
@@ -192,7 +193,8 @@ def epsilon_update_index(selected_index):
     Output(component_id='epsilon-wp-slider-content',component_property='children'),
     Output(component_id='epsilon-ws-slider-content',component_property='children'),
     Output(component_id='epsilon-inf-slider-content',component_property='children'),
-    Output(component_id='epsilon-index-dd',component_property='options')],
+    Output(component_id='epsilon-index-dd',component_property='options'),
+    Output(component_id='epsilon-link',component_property='children')],
     
     [Input(component_id='epsilon-w0-slider',component_property='value'),
     Input(component_id='epsilon-wp-slider',component_property='value'),
@@ -255,10 +257,10 @@ def epsilon_update_graph(selected_w0,selected_wp,selected_ws,selected_inf,nclick
     y=0.99,
     xanchor="right",
     x=0.99
-    ),title=r"$\epsilon_r$", title_x=0.5,yaxis_range=[-200,200],
-    margin=dict(l=20, r=20, t=40, b=20))
+    ),yaxis_range=[-200,200],
+    margin=dict(l=20, r=20, t=20, b=20))
     
-    return fig, content1, content2, content3, content4, [{'label': k+1, 'value': k} for k in range(num_lor)]
+    return fig, content1, content2, content3, content4, [{'label': k+1, 'value': k} for k in range(num_lor)], 'non-sense'
 
 
 @app.callback(Output(component_id='epsilon-button-content',component_property='children'), [Input('epsilon-add-button', 'n_clicks')])
@@ -312,7 +314,7 @@ mu_slider_area_left = html.Div(id='mu-slider-area',className='slider',children=[
             }
         ),
         html.Div(id='mu-ws-slider-content',children=[],style={"text-align":"center","font-size":"1.5em"})
-    ],style={"width":"50%","float":"left"})
+    ])
 
 mu_slider_area_right=html.Div(className='slider',children=[
     dcc.Slider(
@@ -335,9 +337,9 @@ mu_slider_area_right=html.Div(className='slider',children=[
         value=0
     ),
 
-    html.Button("Add 1 more Lorentzian",id='mu-add-button',className='button',style={"display":"inline-block","font-size":"1.5em","margin":"1em","width":"90%","padding":"0.5em"})
+    html.Button("Add",id='mu-add-button',className='button',style={"display":"block","font-size":"1.5em","width":"80%","padding":"0.5em"})
     
-],style={"width":"50%","float":"right"})
+])
 
 @app.callback(
     Output(component_id='mu-slider-area',component_property='children'),
@@ -394,7 +396,8 @@ def mu_update_index(selected_index):
     Output(component_id='mu-wp-slider-content',component_property='children'),
     Output(component_id='mu-ws-slider-content',component_property='children'),
     Output(component_id='mu-inf-slider-content',component_property='children'),
-    Output(component_id='mu-index-dd',component_property='options')],
+    Output(component_id='mu-index-dd',component_property='options'),
+    Output(component_id='mu-link',component_property='children')],
     
     [Input(component_id='mu-w0-slider',component_property='value'),
     Input(component_id='mu-wp-slider',component_property='value'),
@@ -409,7 +412,7 @@ def mu_update_graph(selected_w0,selected_wp,selected_ws,selected_inf,nclick):
 
     if nclick != parameters['nclick-mu']:
         parameters['nclick-mu'] = nclick
-        parameters['mu'] = parameters['mu_num_lor']+1
+        parameters['mu_num_lor'] = parameters['mu_num_lor']+1
         # parameters['epsilon']['current_index'] = parameters['num_lor']+1
 
         #adding parameters
@@ -457,10 +460,10 @@ def mu_update_graph(selected_w0,selected_wp,selected_ws,selected_inf,nclick):
     y=0.99,
     xanchor="right",
     x=0.99
-    ),title=r"$\mu_r$", title_x=0.5,yaxis_range=[-200,200],
-    margin=dict(l=20, r=20, t=40, b=20))
+    ),yaxis_range=[-200,200],
+    margin=dict(l=20, r=20, t=20, b=20))
     
-    return fig, content1, content2, content3, content4, [{'label': k+1, 'value': k} for k in range(num_lor)]
+    return fig, content1, content2, content3, content4, [{'label': k+1, 'value': k} for k in range(num_lor)], 'non-sense'
 
 
 @app.callback(Output(component_id='mu-button-content',component_property='children'), [Input('mu-add-button', 'n_clicks')])
@@ -470,23 +473,127 @@ def mu_on_click(nclick):
 # #endregion#
 
 control_area_children = [
-    html.Div(id='epsilon-control',children=[dcc.Graph(id='epsilon-main-graph',figure={}),
-    epsilon_slider_area_right,
-    epsilon_slider_area_left,
-    html.Div(id='epsilon-button-content',style={"display":"block","clear":"both"}),
-    html.Div(style={"clear":"both"})]
-    ),
-    html.Div(id='mu-control',children=[dcc.Graph(id='mu-main-graph',figure={}),
-    mu_slider_area_right,
-    mu_slider_area_left,
-    html.Div(id='mu-button-content',style={"display":"block","clear":"both"}),
-    html.Div(style={"clear":"both"})])
+    html.Div(id='epsilon-control',children=[
+        dcc.Graph(id='epsilon-main-graph',figure={}),
+        html.Div(id='epsilon-control-right',children=[epsilon_slider_area_left,
+        epsilon_slider_area_right,
+        ]),
+        html.Div(id='epsilon-button-content')
+    ]),
+
+    html.Div(id='mu-control',children=[
+        dcc.Graph(id='mu-main-graph',figure={}),
+        html.Div(id='mu-control-right',children=[mu_slider_area_left,
+        mu_slider_area_right
+        ]),
+        html.Div(id='mu-button-content')
+    ]),
+
+    #these two divs are just for control 
+    html.Div(id='mu-link',style={"display":"none"}),
+    html.Div(id='epsilon-link',style={"display":"none"})
+]
+
+display_area_children=[
+    dcc.Graph(id='n-graph',className='side-plot',figure={}),
+    dcc.Graph(id='z-graph',className='side-plot',figure={})
+]
+
+main_area_children=[
+    dcc.Graph(id='T-graph',figure={}),
+    dcc.Graph(id='R-graph',figure={})
 ]
 
 app.layout=html.Div([
-    html.H1("First Dash App - COOL!",style={"text-align":"center"}),
+    html.H1("Juncheng App",style={"text-align":"center"}),
+    html.Div(id='main-display-area',children=main_area_children),
+    html.Div(id='display-area',children=display_area_children),
+    html.Div(style={"clear":"both"}),
     html.Div(id='control-area',children = control_area_children)
     
 ])
+
+
+@app.callback(
+    [Output(component_id='n-graph',component_property='figure'),
+    Output(component_id='z-graph',component_property='figure')],
+    [Input(component_id='epsilon-main-graph',component_property='figure'),
+    Input(component_id='mu-main-graph',component_property='figure'),
+    Input(component_id='epsilon-link',component_property='children'),
+    Input(component_id='mu-link',component_property='children')]
+)
+def display_update_graph(fig1,fig2,linktext1,linktext2):
+    c=10e8
+    e0=(10**7)/(4*np.pi*c**2) 
+    m0=4*np.pi*10**(-7)
+    
+    num_spectra=parameters['num_spectra'] #number of frequency points, which should be 2001
+    
+    w0e = torch.tensor(parameters['epsilon']['w0'])
+    wpe = torch.tensor(parameters['epsilon']['wp'])
+    wse = torch.tensor(parameters['epsilon']['ws'])
+    eps_infe = torch.tensor(parameters['epsilon']['inf'])
+
+    num_lore = parameters['epsilon_num_lor']
+    w0e = w0e.unsqueeze(1).expand(num_lore, num_spectra)
+    wpe = wpe.unsqueeze(1).expand_as(w0e)
+    wse = wse.unsqueeze(1).expand_as(w0e)
+    w_expande = torch.tensor(w).expand_as(wse)
+
+    nume = pow(wpe,2)
+    denume = pow(w0e,2)-pow(w,2)+(1j)*wse*w
+    epi_r = eps_infe + torch.sum(torch.div(nume,denume),axis=0) #epi_r is episilon relative
+
+    w0m = torch.tensor(parameters['mu']['w0'])
+    wpm = torch.tensor(parameters['mu']['wp'])
+    wsm = torch.tensor(parameters['mu']['ws'])
+    eps_infm = torch.tensor(parameters['mu']['inf'])
+
+    num_lorm = parameters['mu_num_lor']
+    #vectorize for broadcasting
+    w0m = w0m.unsqueeze(1).expand(num_lorm, num_spectra)
+    wpm = wpm.unsqueeze(1).expand_as(w0m)
+    wsm = wsm.unsqueeze(1).expand_as(w0m)
+    w_expandm = torch.tensor(w).expand_as(wsm)
+
+    numm = pow(wpm,2)
+    denumm = pow(w0m,2)-pow(w,2)+(1j)*wsm*w
+    mu_r = eps_inf + torch.sum(torch.div(numm,denumm),axis=0)
+
+    epsilon = e0*epi_r
+    mu = m0*mu_r
+
+    n = torch.sqrt(epi_r*mu_r).detach()
+    z = torch.sqrt(mu/epsilon).detach()
+
+    fig_n= go.Figure()
+    fig_n.add_trace(go.Scatter(x=list(w),y=list(n.real),name='real part'))
+    fig_n.add_trace(go.Scatter(x=list(w),y=list(n.imag),name='imaginary part'))
+    fig_n.update_layout(legend=dict(
+    yanchor="top",
+    y=0.99,
+    xanchor="right",
+    x=0.99
+    ),title=r"n (index of refraction)", title_x=0.5, height=200,
+    margin=dict(l=15, r=15, t=30, b=15))
+
+    fig_z= go.Figure()
+    fig_z.add_trace(go.Scatter(x=list(w),y=list(z.real),name='real part'))
+    fig_z.add_trace(go.Scatter(x=list(w),y=list(z.imag),name='imaginary part'))
+    fig_z.update_layout(legend=dict(
+    yanchor="top",
+    y=0.99,
+    xanchor="right",
+    x=0.99
+    ),title=r"z (impandence)", title_x=0.5,height=200,
+    margin=dict(l=15, r=15, t=30, b=15))
+
+
+
+    return fig_n,fig_z
+    
+
+
+
 
 app.run_server(debug=True)

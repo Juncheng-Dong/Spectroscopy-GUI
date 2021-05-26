@@ -10,6 +10,8 @@
     background-color: lightblue;
     border:0.2em solid gray;
     border-radius: 1em;
+
+    margin:0 auto 1em;
 }
 
 button:focus{
@@ -23,14 +25,48 @@ button:focus{
     text-align: center;
     padding:0.2em;
     font-size: 1.5em;
+
+    clear:both;
 }
 
 #epsilon-control{
     border:0.5em solid grey;
-    border-radius: 0.5em;
     background-color: grey;
     /* color:white; */
-    width:48%;
+    width:50%;
+    box-sizing: border-box;
+}
+
+#epsilon-main-graph{
+    box-sizing: border-box;
+    width:70%;
+    height:400px;
+    float:left;
+    margin-bottom: 1em;
+}
+
+#epsilon-control-right{
+    box-sizing: border-box;
+    width:30%;
+    float:right;
+    height:400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    border:5px solid lightblue;
+    border-left: none;
+
+    color:white;
+}
+#epsilon-button-content{
+    margin: 1em; 
+    clear:both;
+}
+#epsilon-index-dd{
+    width:40%;
+    margin:auto;
+    display:block;
+    /* margin-top: 1em; */
 }
 
 #mu-button-content{
@@ -44,16 +80,76 @@ button:focus{
 
 #mu-control{
     border:0.5em solid grey;
-    border-radius: 0.5em;
     background-color: grey;
     /* color:white; */
-    width:48%;
+    width:50%;
+    box-sizing: border-box;
+    /* height:500px; */
+    overflow: hidden;
+
+    /* display:flex; */
 }
 
+#mu-main-graph{
+    box-sizing: border-box;
+    width:70%;
+    height:400px;
+    float:left;
+    margin-bottom: 1em;
+}
+
+#mu-control-right{
+    box-sizing: border-box;
+    width:30%;
+    float:right;
+    height:400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border:5px solid lightblue;
+    border-left: none;
+}
+#mu-button-content{
+    margin: 1em; 
+    clear:both;
+}
+
+#mu-index-dd{
+    width:40%;
+    margin:auto;
+    display:block;
+    /* margin-top: 1em; */
+}
 #control-area{
     display:flex;
     justify-content: space-evenly;
 }
 .slider{
     margin-top: 1em;
+}
+
+#display-area{
+    float:right;
+    height:400px;
+    overflow: scroll;
+    border:0.5em grey solid;
+    border-radius: 0.5em;
+    width:30%;
+    box-sizing: border-box;
+
+}
+
+#main-display-area{
+    float:left;
+    height:400px;
+    overflow:scroll;
+    border:0.5em grey solid;
+    border-radius: 0.5em;
+    width:70%;
+    box-sizing: border-box;
+}
+
+.side-plot{
+    border-bottom: 5px solid grey;
+    padding-bottom:1em;
+    margin-bottom: 1em;
 }
