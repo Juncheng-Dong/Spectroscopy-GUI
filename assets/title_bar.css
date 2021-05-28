@@ -1,0 +1,9 @@
+#title-bar h1{
+    border:5px solid lightblue;
+    color:lightblue;
+    margin:0 auto;
+}
+
+#title-bar{
+    margin:0;
+}

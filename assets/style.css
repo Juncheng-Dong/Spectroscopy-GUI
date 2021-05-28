@@ -12,6 +12,11 @@
     border-radius: 1em;
 
     margin:0 auto 1em;
+    color:white;
+    display:block;
+    font-size: 1.2em;
+    width:60%;
+    padding:0.2em;
 }
 
 button:focus{
@@ -132,6 +137,7 @@ h3{
 #control-area{
     display:flex;
     justify-content: space-evenly;
+    color:white;
 }
 .slider{
     margin-top: 1em;
@@ -139,7 +145,7 @@ h3{
 
 #display-area{
     float:right;
-    height:400px;
+    height:420px;
     overflow: scroll;
     border:0.5em grey solid;
     border-radius: 0.5em;
@@ -150,7 +156,7 @@ h3{
 
 #main-display-area{
     float:left;
-    height:400px;
+    height:420px;
     overflow:scroll;
     border:0.5em grey solid;
     border-radius: 0.5em;
@@ -161,3 +167,14 @@ h3{
 .side-plot{
     border-bottom: 5px solid grey;
 }
+
+#mu-control .highlight{
+    color:lightblue;
+    font-style: oblique;
+}
+
+#epsilon-control .highlight{
+    color:lightblue;
+    font-style: oblique;
+}
+

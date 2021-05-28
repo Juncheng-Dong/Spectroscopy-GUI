@@ -1,8 +1,11 @@
+from setting import *
+from helper import *
+
 import torch
 
 import numpy as np
 import pandas as pd
-from plotly import __version__
+
 import plotly.offline as pyo
 import plotly.graph_objects as go
 import plotly.express as px
@@ -11,11 +14,6 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
-
-num_lor_init=1
-
-freq_low=1
-freq_high=5
 
 def init_param(num_lor):
     w0 = torch.tensor(np.random.uniform(freq_low, freq_high, num_lor), requires_grad=True)
@@ -36,8 +34,8 @@ def new_param():
     return w0,wp,ws
 
 #Initialize Lorentzian parameters randomly for epsilon and mu
-w0,wp,ws,eps_inf,d=init_param(num_lor_init) 
-w0m,wpm,wsm,eps_infm,dm = init_param(num_lor_init)
+w0,wp,ws,eps_inf,d=init_param(num_lor_init_epsilon) 
+w0m,wpm,wsm,eps_infm,dm = init_param(num_lor_init_mu)
 
 #Store all related parameters in dict 'parameters'
 parameters={
@@ -55,86 +53,29 @@ parameters={
         "inf":eps_infm.item(),
         "current_index":0
     },
-    "epsilon_num_lor":num_lor_init,
+    "epsilon_num_lor":num_lor_init_epsilon,
     "mu_num_lor":0,
     "nclick-epsilon":None,
     "nclick-mu":None,
-    "num_spectra":2001
+    "num_spectra":NUM_SPECTRA
 }
 #generate equally separated points from 1THz to 5THz
-w=np.linspace(freq_low,freq_high,2001)
+w=np.linspace(freq_low,freq_high,NUM_SPECTRA)
 
 #Initialize the App
 app=dash.Dash(__name__)
 #region# ################### Epsilon Related Section ##########################
-epsilon_current_index = parameters["epsilon"]["current_index"]
-
-epsilon_slider_area_left = html.Div(id='epsilon-slider-area',className='slider',children=[
-        dcc.Slider(
-            id='epsilon-w0-slider',
-            min=1,
-            max=5,
-            step=0.01,
-            value=parameters['epsilon']['w0'][epsilon_current_index],
-            # updatemode='drag',
-            marks={
-                1:{"label":"min:1",'style': {'color': 'white'}},
-                5:{"label":"max:5",'style': {'color': 'white'}}
-            },
-            updatemode='drag'
-        ),
-        html.Div(id='epsilon-w0-slider-content',children=[],style={"text-align":"center","font-size":"1.5em"}),
-
-        dcc.Slider(
-            id='epsilon-wp-slider',
-            min=0,
-            max=5,
-            step=0.01,
-            value=parameters['epsilon']['wp'][epsilon_current_index],
-            # updatemode='drag',
-            marks={
-                0:{"label":"min:0",'style': {'color': 'white'}},
-                5:{"label":"max:5",'style': {'color': 'white'}}
-            }
-        ),
-        html.Div(id='epsilon-wp-slider-content',children=[],style={"text-align":"center","font-size":"1.5em"}),
-        dcc.Slider(
-            id='epsilon-ws-slider',
-            min=0,
-            max=0.05,
-            step=0.001,
-            value=parameters['epsilon']['ws'][epsilon_current_index],
-            # updatemode='drag',
-            marks={
-                0:{"label":"min:0",'style': {'color': 'white'}},
-                0.05:{"label":"max:0.05",'style': {'color': 'white'}}
-            }
-        ),
-        html.Div(id='epsilon-ws-slider-content',children=[],style={"text-align":"center","font-size":"1.5em"})
-    ])
-
-epsilon_slider_area_right=html.Div(className='slider',children=[
-    dcc.Slider(
-        id='epsilon-inf-slider',
-        min=0,
-        max=100,
-        step=1,
-        value=parameters['epsilon']['inf'],
-        # updatemode='drag',
-        marks={
-            0:{"label":"min:0",'style': {'color': 'white'}},
-            100:{"label":"max:100",'style': {'color': 'white'}}
-        }
-    ),
-    html.Div(id='epsilon-inf-slider-content',style={"text-align":"center","font-size":"1.5em"}),
+epsilon_slider_area = update_epsilon_slider(parameters)
+epsilon_add_area=html.Div(className='slider',children=[
 
     dcc.Dropdown(
         id='epsilon-index-dd',
         options=[{'label': k+1, 'value': k} for k in range(parameters['epsilon_num_lor'])],
-        value=0,style={"color":"black"}
+        value=0,style={"color":"black","text-align":"center"},
+        clearable=False
     ),
 
-    html.Button("Add",id='epsilon-add-button',className='button',style={"display":"block","font-size":"1.5em","width":"80%","padding":"0.5em"})
+    html.Button("Add",id='epsilon-add-button',className='button')
     
 ])
 
@@ -142,50 +83,11 @@ epsilon_slider_area_right=html.Div(className='slider',children=[
     Output(component_id='epsilon-slider-area',component_property='children'),
     Input(component_id='epsilon-index-dd',component_property='value')
 )
-def epsilon_update_index(selected_index):
+def epsilon_slider_update(selected_index):
     current_index=selected_index
-    parameters['epsilon']['current_index']=current_index
-    return html.Div([dcc.Slider(
-            id='epsilon-w0-slider',
-            min=1,
-            max=5,
-            step=0.01,
-            value=parameters['epsilon']['w0'][current_index],
-            # updatemode='drag',
-            marks={
-                1:{"label":"min:1",'style': {'color': 'white'}},
-                5:{"label":"max:5",'style': {'color': 'white'}}
-            }
-        ),
-        html.Div(id='epsilon-w0-slider-content',children=[],style={"text-align":"center","font-size":"1.5em"}),
+    parameters['epsilon']['current_index']=current_index #update parameters dictionary
+    return update_epsilon_slider(parameters)
 
-        dcc.Slider(
-            id='epsilon-wp-slider',
-            min=0,
-            max=5,
-            step=0.01,
-            value=parameters['epsilon']['wp'][current_index],
-            # updatemode='drag',
-            marks={
-                0:{"label":"min:0",'style': {'color': 'white'}},
-                5:{"label":"max:5",'style': {'color': 'white'}}
-            }
-        ),
-        html.Div(id='epsilon-wp-slider-content',children=[],style={"text-align":"center","font-size":"1.5em"}),
-        dcc.Slider(
-            id='epsilon-ws-slider',
-            min=0,
-            max=0.05,
-            step=0.001,
-            value=parameters['epsilon']['ws'][current_index],
-            # updatemode='drag',
-            marks={
-                0:{"label":"min:0",'style': {'color': 'white'}},
-                0.05:{"label":"max:0.05",'style': {'color': 'white'}}
-            }
-        ),
-        html.Div(id='epsilon-ws-slider-content',children=[],style={"text-align":"center","font-size":"1.5em"})
-    ])
 
 @app.callback(
     [Output(component_id='epsilon-main-graph',component_property='figure'),
@@ -210,7 +112,6 @@ def epsilon_update_graph(selected_w0,selected_wp,selected_ws,selected_inf,nclick
     if nclick != parameters['nclick-epsilon']:
         parameters['nclick-epsilon'] = nclick
         parameters['epsilon_num_lor'] = parameters['epsilon_num_lor']+1
-        # parameters['epsilon']['current_index'] = parameters['num_lor']+1
 
         #adding parameters
         w0_new, wp_new,ws_new =  new_param()
@@ -270,74 +171,17 @@ def epsilon_on_click(nclick):
 # #endregion#
 
 #region# ################### Mu Related Section ##########################
-mu_current_index = parameters["mu"]["current_index"]
-
-mu_slider_area_left = html.Div(id='mu-slider-area',className='slider',children=[
-        dcc.Slider(
-            id='mu-w0-slider',
-            min=1,
-            max=5,
-            step=0.01,
-            value=parameters['mu']['w0'][mu_current_index],
-            # updatemode='drag',
-            marks={
-                1:"min:1",
-                5:"max:5"
-            }
-        ),
-        html.Div(id='mu-w0-slider-content',children=[],style={"text-align":"center","font-size":"1.5em"}),
-
-        dcc.Slider(
-            id='mu-wp-slider',
-            min=0,
-            max=5,
-            step=0.01,
-            value=parameters['mu']['wp'][mu_current_index],
-            # updatemode='drag',
-            marks={
-                0:"min:0",
-                5:"max:5"
-            }
-        ),
-        html.Div(id='mu-wp-slider-content',children=[],style={"text-align":"center","font-size":"1.5em"}),
-        dcc.Slider(
-            id='mu-ws-slider',
-            min=0,
-            max=0.05,
-            step=0.001,
-            value=parameters['mu']['ws'][mu_current_index],
-            # updatemode='drag',
-            marks={
-                0:"min:0",
-                0.05:"max:0.05"
-            }
-        ),
-        html.Div(id='mu-ws-slider-content',children=[],style={"text-align":"center","font-size":"1.5em"}),
-
-        dcc.Slider(
-        id='mu-inf-slider',
-        min=0,
-        max=100,
-        step=1,
-        value=parameters['mu']['inf'],
-        # updatemode='drag',
-        marks={
-            0:"min:0",
-            100:"max:100"
-        }
-        ),
-        html.Div(id='mu-inf-slider-content',style={"text-align":"center","font-size":"1.5em"})
-    ])
-
-mu_slider_area_right=html.Div(className='slider',children=[
+mu_slider_area = update_mu_slider(parameters)
+mu_add_area=html.Div(className='slider',children=[
 
     dcc.Dropdown(
         id='mu-index-dd',
         options=[{'label': k+1, 'value': k} for k in range(parameters['mu_num_lor'])],
-        value=0
+        value=0,
+        clearable=False
     ),
 
-    html.Button("Add",id='mu-add-button',className='button',style={"display":"block","font-size":"1.5em","width":"80%","padding":"0.5em"})
+    html.Button("Add",id='mu-add-button',className='button')
     
 ])
 
@@ -348,63 +192,7 @@ mu_slider_area_right=html.Div(className='slider',children=[
 def mu_update_index(selected_index):
     current_index=selected_index
     parameters['mu']['current_index']=current_index
-    return html.Div([dcc.Slider(
-            id='mu-w0-slider',
-            min=1,
-            max=5,
-            step=0.01,
-            value=parameters['mu']['w0'][current_index],
-            # updatemode='drag',
-            marks={
-                1:"min:1",
-                5:"max:5"
-            }
-        ),
-        html.Div(id='mu-w0-slider-content',children=[],style={"text-align":"center","font-size":"1.5em"}),
-
-        dcc.Slider(
-            id='mu-wp-slider',
-            min=0,
-            max=5,
-            step=0.01,
-            value=parameters['mu']['wp'][current_index],
-            # updatemode='drag',
-            marks={
-                0:"min:0",
-                5:"max:5"
-            }
-        ),
-        html.Div(id='mu-wp-slider-content',children=[],style={"text-align":"center","font-size":"1.5em"}),
-        dcc.Slider(
-            id='mu-ws-slider',
-            min=0,
-            max=0.05,
-            step=0.001,
-            value=parameters['mu']['ws'][current_index],
-            # updatemode='drag',
-            marks={
-                0:"min:0",
-                0.05:"max:0.05"
-            }
-        ),
-        html.Div(id='mu-ws-slider-content',children=[],style={"text-align":"center","font-size":"1.5em"}),
-        
-        #Slider of MU_inf is irrelevant to index of Lorentzian
-        dcc.Slider(
-        id='mu-inf-slider',
-        min=0,
-        max=100,
-        step=1,
-        value=parameters['mu']['inf'],
-        # updatemode='drag',
-        marks={
-            0:"min:0",
-            100:"max:100"
-        }
-        ),
-        html.Div(id='mu-inf-slider-content',style={"text-align":"center","font-size":"1.5em"})
-
-    ])
+    return update_mu_slider(parameters)
 
 @app.callback(
     [Output(component_id='mu-main-graph',component_property='figure'),
@@ -508,8 +296,8 @@ control_area_children = [
     html.Div(id='epsilon-control',children=[
         html.H3("EPSILON Relative",style={"text-align":"center"}),
         dcc.Graph(id='epsilon-main-graph',figure={}),
-        html.Div(id='epsilon-control-right',children=[epsilon_slider_area_left,
-        epsilon_slider_area_right,
+        html.Div(id='epsilon-control-right',children=[epsilon_slider_area,
+        epsilon_add_area
         ]),
         html.Div(id='epsilon-button-content')
     ]),
@@ -517,8 +305,8 @@ control_area_children = [
     html.Div(id='mu-control',children=[
         html.H3("MU Relative",style={"text-align":"center"}),
         dcc.Graph(id='mu-main-graph',figure={}),
-        html.Div(id='mu-control-right',children=[mu_slider_area_left,
-        mu_slider_area_right
+        html.Div(id='mu-control-right',children=[mu_slider_area,
+        mu_add_area
         ]),
         html.Div(id='mu-button-content')
     ]),
@@ -534,12 +322,15 @@ display_area_children=[
 ]
 
 main_area_children=[
-    dcc.Graph(id='T-graph',figure={}),
-    dcc.Graph(id='R-graph',figure={})
+    dcc.Graph(id='T-graph',figure={})
+]
+
+title_bar_children=[
+    html.H1("Juncheng App",style={"text-align":"center"})
 ]
 
 app.layout=html.Div([
-    html.H1("Juncheng App",style={"text-align":"center"}),
+    html.Div(id='title-bar',children=title_bar_children),
     html.Div(id='main-display-area',children=main_area_children),
     html.Div(id='display-area',children=display_area_children),
     html.Div(style={"clear":"both"}),
@@ -644,7 +435,5 @@ def display_update_graph(fig1,fig2,linktext1,linktext2):
     return fig_n,fig_z,fig_T
     
 
-
-
-
+#Finally! Run the Server
 app.run_server(debug=True)
