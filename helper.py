@@ -160,11 +160,12 @@ upload_component = html.Div(id='upload-area',children=[
             'height': '60px',
             'lineHeight': '60px',
             'borderWidth': '5px',
-            'borderStyle': 'dashed',
+            'borderStyle': 'solid',
             'borderRadius': '1em',
             'textAlign': 'center',
             'margin': '10px auto',
-            'font-size':"1.5em"
+            'font-size':"1.5em",
+            "background":"white"
         }
     ),
     html.Div(id='output-data-upload',style={"text-align":"center"}),

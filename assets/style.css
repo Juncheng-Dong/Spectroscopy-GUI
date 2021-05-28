@@ -46,6 +46,7 @@ h3{
 
 #epsilon-control{
     border:0.5em solid grey;
+    padding:10px;
     background-color: grey;
     /* color:white; */
     width:50%;
@@ -58,6 +59,8 @@ h3{
     height:400px;
     float:left;
     margin-bottom: 1em;
+    border-radius: 2em 0 0 2em;
+    overflow: hidden;
 }
 
 #epsilon-control-right{
@@ -102,6 +105,7 @@ h3{
     box-sizing: border-box;
     /* height:500px; */
     overflow: hidden;
+    padding:10px;
 
     /* display:flex; */
 }
@@ -112,6 +116,8 @@ h3{
     height:400px;
     float:left;
     margin-bottom: 1em;
+    border-radius: 2em 0 0 2em;
+    overflow: hidden;
 }
 
 #mu-control-right{
@@ -141,6 +147,9 @@ h3{
     display:flex;
     justify-content: space-evenly;
     color:white;
+    margin-top: 5px;
+    border-radius: 2em;
+    overflow:hidden;
 }
 .slider{
     margin-top: 1em;
@@ -151,7 +160,7 @@ h3{
     height:420px;
     overflow: scroll;
     border:0.5em grey solid;
-    border-radius: 0.5em;
+    border-radius: 2em;
     width:30%;
     box-sizing: border-box;
 
@@ -162,13 +171,14 @@ h3{
     height:420px;
     overflow:scroll;
     border:0.5em grey solid;
-    border-radius: 0.5em;
+    border-radius: 2em;
     width:70%;
     box-sizing: border-box;
 }
 
 .side-plot{
     border-bottom: 5px solid grey;
+    /* border-radius: 20px; */
 }
 
 #mu-control .highlight{

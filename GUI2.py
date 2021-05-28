@@ -303,7 +303,6 @@ def mu_on_click(nclick):
 
 control_area_children = [
     html.Div(id='epsilon-control',children=[
-        html.H3("EPSILON Relative",style={"text-align":"center"}),
         dcc.Graph(id='epsilon-main-graph',figure={}),
         html.Div(id='epsilon-control-right',children=[epsilon_slider_area,
         epsilon_add_area
@@ -312,7 +311,6 @@ control_area_children = [
     ]),
 
     html.Div(id='mu-control',children=[
-        html.H3("MU Relative",style={"text-align":"center"}),
         dcc.Graph(id='mu-main-graph',figure={}),
         html.Div(id='mu-control-right',children=[mu_slider_area,
         mu_add_area
