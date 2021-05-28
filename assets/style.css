@@ -70,6 +70,7 @@ h3{
 
     border:5px solid lightblue;
     border-left: none;
+    border-radius: 0 2em 2em 0;
 
     color:white;
 }
@@ -122,6 +123,8 @@ h3{
     overflow-x: hidden;
     border:5px solid lightblue;
     border-left: none;
+
+    border-radius: 0 2em 2em 0;
 }
 #mu-button-content{
     margin: 1em; 
