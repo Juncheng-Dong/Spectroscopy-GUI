@@ -18,6 +18,16 @@ button:focus{
     outline:none;
 }
 
+.invisible{
+    display:none;
+}
+
+h3{
+    margin:0 auto;
+    text-decoration: underline;
+    color:white;
+}
+
 #epsilon-button-content{
     border:0.2em solid lightblue;
     border-radius: 0.5em;
@@ -150,6 +160,4 @@ button:focus{
 
 .side-plot{
     border-bottom: 5px solid grey;
-    padding-bottom:1em;
-    margin-bottom: 1em;
 }
