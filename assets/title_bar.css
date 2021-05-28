@@ -1,9 +1,56 @@
 #title-bar h1{
     border:5px solid royalblue;
+    border-radius: 20px;
     color:royalblue;
-    margin:0 auto;
+    margin:0 1em;
+
+    line-height: 60px;
+    text-align: center;
+    height:60px;
+    width:400px;
+
+    flex-grow: 1;
 }
 
 #title-bar{
     margin:0;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border:5px solid grey;
+    border-radius: 20px;
+    padding:5px;
+
+    margin: 20px;
+
+}
+
+#upload-data{
+    transition:all 0.2s ease-in-out;
+}
+
+#reset-area{
+    line-height: 60px;
+    text-align: center;
+    height:60px;
+    width:400px;
+
+    font-size:1.5em;
+    color:white;
+    background-color: lightcoral;
+    border:5px solid lightcoral;
+    border-radius: 20px;
+
+    transition: all 0.5s ease-in-out;
+}
+
+#reset-area:hover{
+    background-color: red;
+    font-size: 1.6em;
+}
+
+
+body{
+    margin:0
 }

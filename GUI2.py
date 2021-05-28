@@ -13,7 +13,7 @@ import plotly.express as px
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 
 def init_param(num_lor):
     w0 = torch.tensor(np.random.uniform(freq_low, freq_high, num_lor), requires_grad=True)
@@ -35,6 +35,11 @@ def new_param():
 
 #Initialize Lorentzian parameters randomly for epsilon and mu
 w0,wp,ws,eps_inf,d=init_param(num_lor_init_epsilon) 
+w0[0]=3
+wp[0]=3
+ws[0]=0.01
+
+
 w0m,wpm,wsm,eps_infm,dm = init_param(num_lor_init_mu)
 
 #Store all related parameters in dict 'parameters'
@@ -57,7 +62,8 @@ parameters={
     "mu_num_lor":0,
     "nclick-epsilon":None,
     "nclick-mu":None,
-    "num_spectra":NUM_SPECTRA
+    "num_spectra":NUM_SPECTRA,
+    "target_spectrum":None
 }
 #generate equally separated points from 1THz to 5THz
 w=np.linspace(freq_low,freq_high,NUM_SPECTRA)
@@ -148,7 +154,7 @@ def epsilon_update_graph(selected_w0,selected_wp,selected_ws,selected_inf,nclick
     w_expand = torch.tensor(w).expand_as(ws)
 
     num = pow(wp,2)
-    denum = pow(w0,2)-pow(w_expand,2)+(1j)*ws*w_expand
+    denum = pow(w0,2)-pow(w_expand,2)-(1j)*ws*w_expand
     epi_r = eps_inf + torch.sum(torch.div(num,denum),axis=0)
 
     fig= go.Figure()
@@ -258,7 +264,7 @@ def mu_update_graph(selected_w0,selected_wp,selected_ws,selected_inf,nclick):
     w_expand = torch.tensor(w).expand_as(ws)
 
     num = pow(wp,2)
-    denum = pow(w0,2)-pow(w,2)+(1j)*ws*w
+    denum = pow(w0,2)-pow(w,2)-(1j)*ws*w
     epi_r = eps_inf + torch.sum(torch.div(num,denum),axis=0)
 
     if num_lor == 0:
@@ -329,7 +335,11 @@ main_area_children=[
 ]
 
 title_bar_children=[
-    html.H1("Juncheng App",style={"text-align":"center"})
+    upload_component,
+    
+    html.H1(children=[html.Span("Juncheng",style={"text-decoration":"underline"}),"App"],style={"text-align":"center"}),
+    reset_component,
+    html.Div(id='upload-link',style={"display":"none"})
 ]
 
 app.layout=html.Div([
@@ -346,9 +356,10 @@ app.layout=html.Div([
     Output(component_id='T-graph',component_property='figure')],
     
     [Input(component_id='epsilon-link',component_property='children'),
-    Input(component_id='mu-link',component_property='children')]
+    Input(component_id='mu-link',component_property='children'),
+    Input(component_id='upload-link',component_property='children')]
 )
-def display_update_graph(linktext1,linktext2):
+def display_update_graph(linktext1,linktext2,linktext3):
     c=3e-4
     e0=9.85e-12
     m0=4*np.pi*10**(-7)
@@ -362,13 +373,13 @@ def display_update_graph(linktext1,linktext2):
     eps_infe = torch.tensor(parameters['epsilon']['inf'])
 
     num_lore = parameters['epsilon_num_lor']
-    w0e = w0e.unsqueeze(1).expand(num_lore, num_spectra)
-    wpe = wpe.unsqueeze(1).expand_as(w0e)
-    wse = wse.unsqueeze(1).expand_as(w0e)
-    w_expande = torch.tensor(w).expand_as(wse)
+    w0e = 2*np.pi*w0e.unsqueeze(1).expand(num_lore, num_spectra)
+    wpe = 2*np.pi*wpe.unsqueeze(1).expand_as(w0e)
+    wse = 2*np.pi*wse.unsqueeze(1).expand_as(w0e)
+    w_expande = 2*np.pi*torch.tensor(w).expand_as(wse)
 
     nume = pow(wpe,2)
-    denume = pow(w0e,2)-pow(w_expande,2)+(1j)*wse*w_expande
+    denume = pow(w0e,2)-pow(w_expande,2)-(1j)*wse*w_expande
     epi_r = eps_infe + torch.sum(torch.div(nume,denume),axis=0) #epi_r is episilon relative
 
     w0m = torch.tensor(parameters['mu']['w0'])
@@ -378,13 +389,13 @@ def display_update_graph(linktext1,linktext2):
 
     num_lorm = parameters['mu_num_lor']
     #vectorize for broadcasting
-    w0m = w0m.unsqueeze(1).expand(num_lorm, num_spectra)
-    wpm = wpm.unsqueeze(1).expand_as(w0m)
-    wsm = wsm.unsqueeze(1).expand_as(w0m)
-    w_expandm = torch.tensor(w).expand_as(wsm)
+    w0m = 2*np.pi*w0m.unsqueeze(1).expand(num_lorm, num_spectra)
+    wpm = 2*np.pi*wpm.unsqueeze(1).expand_as(w0m)
+    wsm = 2*np.pi*wsm.unsqueeze(1).expand_as(w0m)
+    w_expandm = 2*np.pi*torch.tensor(w).expand_as(wsm)
 
     numm = pow(wpm,2)
-    denumm = pow(w0m,2)-pow(w,2)+(1j)*wsm*w
+    denumm = pow(w0m,2)-pow(w,2)-(1j)*wsm*w_expandm
     mu_r = eps_infm + torch.sum(torch.div(numm,denumm),axis=0)
 
     if parameters['mu_num_lor']==0:
@@ -421,19 +432,36 @@ def display_update_graph(linktext1,linktext2):
     )
 
     fig_T= go.Figure()
-    fig_T.add_trace(go.Scatter(x=list(w),y=list(T.detach())))
+    fig_T.add_trace(go.Scatter(x=list(w),y=list(T.detach()),name='constructed'))
+    if not parameters['target_spectrum'] is None:
+        fig_T.add_trace(go.Scatter(x=list(w),y=list(parameters['target_spectrum']),name='target',
+        line = dict(color='grey', width=2, dash='dash')))
     fig_T.update_layout(legend=dict(
     yanchor="top",
     y=0.99,
     xanchor="right",
     x=0.99
-    ),title=r"Spectrum - T", title_x=0.5,height=400,yaxis_range=[-0.05,1],
+    ),title="Spectrum - T", title_x=0.5,height=400,yaxis_range=[-0.05,1],
     margin=dict(l=15, r=15, t=30, b=15))
-
-
 
     return fig_n,fig_z,fig_T
     
+@app.callback(
+    [Output('output-data-upload', 'children'),
+    Output('upload-link','children')],
+              Input('upload-data', 'contents'),
+              State('upload-data', 'filename'),
+              State('upload-data', 'last_modified'))
+def update_output(list_of_contents, list_of_names, list_of_dates):
+    if list_of_contents is not None:
+        data,children = parse_contents(list_of_contents, list_of_names, list_of_dates)
+        # [parse_contents(c, n, d) for c, n, d in
+        #     zip(list_of_contents, list_of_names, list_of_dates)]
+        parameters['target_spectrum'] = data[0]
+        print(data[0])
+        return children,'nonsense'
+    else:
+        return None,'nonsense'
 
 #Finally! Run the Server
 app.run_server(debug=True)

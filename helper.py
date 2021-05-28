@@ -5,6 +5,13 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 
+import pandas as pd
+
+import base64
+import datetime
+import io
+
+
 def update_epsilon_slider(parameters):
     '''
     update_slider will return a dash component for epsilon sliders 
@@ -137,4 +144,59 @@ def update_mu_slider(parameters):
                 inf_high:{"label":f"max:{inf_high}",'style': {'color': 'white'}}
             }
         )
+    ])
+
+reset_component = html.Div('Clear&Reset',id='reset-area')
+
+upload_component = html.Div(id='upload-area',children=[
+    dcc.Upload(
+        id='upload-data',
+        children=html.Div([
+            'Drag&Drop or ',
+            html.A('Select CSV File',style={"text-decoration":"underline","cursor":"pointer"})
+        ]),
+        style={
+            'width': '400px',
+            'height': '60px',
+            'lineHeight': '60px',
+            'borderWidth': '5px',
+            'borderStyle': 'dashed',
+            'borderRadius': '1em',
+            'textAlign': 'center',
+            'margin': '10px auto',
+            'font-size':"1.5em"
+        }
+    ),
+    html.Div(id='output-data-upload',style={"text-align":"center"}),
+])
+
+
+def parse_contents(contents, filename, date):
+    content_type, content_string = contents.split(',')
+    print(content_type)
+    decoded = base64.b64decode(content_string)
+    try:
+        if 'csv' in filename:
+            # Assume that the user uploaded a CSV file
+            df = pd.read_csv(
+                io.StringIO(decoded.decode('utf-8')))
+        elif 'xls' in filename:
+            # Assume that the user uploaded an excel file
+            df = pd.read_excel(io.BytesIO(decoded))
+    except Exception as e:
+        print(e)
+        return html.Div([
+            'There was an error processing this file.'
+        ])
+    
+    return df.to_numpy(),html.Div([
+        html.H5(f'Success Upload:{filename}')
+
+        # html.Hr(),  # horizontal line
+        # # For debugging, display the raw contents provided by the web browser
+        # html.Div('Raw Content'),
+        # html.Pre(contents[0:200] + '...', style={
+        #     'whiteSpace': 'pre-wrap',
+        #     'wordBreak': 'break-all'
+        # })
     ])
