@@ -99,7 +99,7 @@ def update_mu_slider(parameters):
     selected_inf = parameters['mu']['inf']
 
     return [
-        html.Div(id='mu-w0-slider-content',className='slider-content',children=[f'w_0 : {selected_w0:.2f}'],style={"text-align":"center","font-size":"1.5em"}),
+        html.Div(id='mu-w0-slider-content',className='slider-content',children=[f'w0: {selected_w0:.2f}'],style={"text-align":"center","font-size":"1.5em"}),
         dcc.Slider(
             id='mu-w0-slider',
             min=w0_freq_low,
@@ -114,7 +114,7 @@ def update_mu_slider(parameters):
             # ,updatemode='drag'
         ),
         
-        html.Div(id='mu-wp-slider-content',className='slider-content',children=[f'w_p : {selected_wp:.2f}'],style={"text-align":"center","font-size":"1.5em"}),
+        html.Div(id='mu-wp-slider-content',className='slider-content',children=[f'wp: {selected_wp:.2f}'],style={"text-align":"center","font-size":"1.5em"}),
         dcc.Slider(
             id='mu-wp-slider',
             min=wp_freq_low,
@@ -128,7 +128,7 @@ def update_mu_slider(parameters):
             }
         ),
         
-        html.Div(id='mu-ws-slider-content',className='slider-content',children=[f'w_s : {selected_ws:.3f}'],style={"text-align":"center","font-size":"1.5em"}),
+        html.Div(id='mu-ws-slider-content',className='slider-content',children=[f'ws: {selected_ws:.3f}'],style={"text-align":"center","font-size":"1.5em"}),
         dcc.Slider(
             id='mu-ws-slider',
             min=ws_freq_low,

@@ -162,7 +162,7 @@ h3{
     height:calc(400px + 1em);
     overflow: scroll;
     border:0.5em grey solid;
-    border-radius: 2em;
+    border-radius: 20px;
     width:30%;
     box-sizing: border-box;
 
