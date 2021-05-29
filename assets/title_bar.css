@@ -1,5 +1,5 @@
 #title-bar h1{
-    border:5px solid royalblue;
+    border:10px solid royalblue;
     border-radius: 20px;
     color:royalblue;
     background-color: white;
@@ -12,6 +12,13 @@
 
     flex-grow: 1;
 }
+#title-bar h1 span{
+    transition: all 0.3s;
+}
+#title-bar h1 span:hover{
+    color:lightblue;
+    font-size:1.7em;
+}
 
 #title-bar{
     margin:0;
@@ -19,11 +26,11 @@
     justify-content: space-between;
     align-items: center;
 
-    border:5px solid grey;
+    border:0.5em solid grey;
     border-radius: 20px;
     padding:5px;
 
-    margin: 10px;
+    margin: 5px auto;
 
 }
 
@@ -35,20 +42,20 @@
     line-height: 60px;
     text-align: center;
     height:60px;
-    width:400px;
+    width:200px;
 
     font-size:1.5em;
+    text-decoration: underline;
     color:white;
     background-color: lightcoral;
-    border:5px solid lightcoral;
     border-radius: 20px;
 
-    transition: all 0.5s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 
 #reset-area:hover{
     background-color: red;
-    font-size: 1.6em;
+    cursor: pointer;
 }
 
 

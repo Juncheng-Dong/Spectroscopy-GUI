@@ -40,14 +40,15 @@ h3{
     text-align: center;
     padding:0.2em;
     font-size: 1.5em;
-
+    
+    margin: 1em auto 0; 
     clear:both;
 }
 
 #epsilon-control{
-    border:0.5em solid grey;
-    padding:10px;
+    /* border:0.5em solid grey; */
     background-color: grey;
+    padding:0.5em;
     /* color:white; */
     width:50%;
     box-sizing: border-box;
@@ -59,7 +60,7 @@ h3{
     height:400px;
     float:left;
     margin-bottom: 1em;
-    border-radius: 2em 0 0 2em;
+    border-radius: 1em 0 0 1em;
     overflow: hidden;
 }
 
@@ -73,14 +74,11 @@ h3{
 
     border:5px solid lightblue;
     border-left: none;
-    border-radius: 0 2em 2em 0;
+    border-radius: 0 1em 1em 0;
 
     color:white;
 }
-#epsilon-button-content{
-    margin: 1em; 
-    clear:both;
-}
+
 #epsilon-index-dd{
     width:40%;
     margin:auto;
@@ -95,19 +93,22 @@ h3{
     text-align: center;
     padding:0.2em;
     font-size: 1.5em;
+
+    margin: 1em auto 0; 
+    clear:both;
+    
+    
 }
 
 #mu-control{
-    border:0.5em solid grey;
+    /* border:0.5em solid grey; */
     background-color: grey;
+    padding:0.5em;
     /* color:white; */
     width:50%;
     box-sizing: border-box;
     /* height:500px; */
     overflow: hidden;
-    padding:10px;
-
-    /* display:flex; */
 }
 
 #mu-main-graph{
@@ -116,7 +117,7 @@ h3{
     height:400px;
     float:left;
     margin-bottom: 1em;
-    border-radius: 2em 0 0 2em;
+    border-radius: 1em 0 0 1em;
     overflow: hidden;
 }
 
@@ -130,11 +131,7 @@ h3{
     border:5px solid lightblue;
     border-left: none;
 
-    border-radius: 0 2em 2em 0;
-}
-#mu-button-content{
-    margin: 1em; 
-    clear:both;
+    border-radius: 0 1em 1em 0;
 }
 
 #mu-index-dd{
@@ -148,16 +145,21 @@ h3{
     justify-content: space-evenly;
     color:white;
     margin-top: 5px;
-    border-radius: 2em;
+    border-radius: 20px;
     overflow:hidden;
 }
 .slider{
     margin-top: 1em;
 }
+.slider-content{
+    font-size: 1.5em;
+    font-family: monospace;
+    text-align: center;
 
+}
 #display-area{
     float:right;
-    height:420px;
+    height:calc(400px + 1em);
     overflow: scroll;
     border:0.5em grey solid;
     border-radius: 2em;
@@ -168,18 +170,19 @@ h3{
 
 #main-display-area{
     float:left;
-    height:420px;
+    height:calc(400px + 1em);
     overflow:scroll;
     border:0.5em grey solid;
-    border-radius: 2em;
-    width:70%;
+    border-radius: 20px;
+    width:calc(70% + (-5px));
     box-sizing: border-box;
 }
 
-.side-plot{
+
+
+/* #n-graph{
     border-bottom: 5px solid grey;
-    /* border-radius: 20px; */
-}
+} */
 
 #mu-control .highlight{
     color:lightblue;
