@@ -14,41 +14,15 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
 
+import dash_dangerously_set_inner_html as dashd
+
 #global variable for reset the program
 RESET=False
 
-#Initialize Lorentzian parameters randomly for epsilon and mu
-w0,wp,ws,eps_inf=init_param(num_lor_init_epsilon) 
-w0[0]=3
-wp[0]=3
-ws[0]=0.01
-w0m,wpm,wsm,eps_infm = init_param(num_lor_init_mu)
+
 
 #Store all related parameters in dict 'parameters'
-parameters={
-    "epsilon":{
-        "w0":list(w0),
-        "ws":list(ws),
-        "wp":list(wp),
-        "inf":eps_inf,
-        "current_index":0
-    },
-    "mu":{
-        "w0":list(w0m), 
-        "ws":list(wsm),
-        "wp":list(wpm),
-        "inf":eps_infm,
-        "current_index":0
-    },
-    "epsilon_num_lor":num_lor_init_epsilon,
-    "mu_num_lor":0,
-    "nclick-epsilon":None,
-    "nclick-mu":None,
-    "num_spectra":NUM_SPECTRA,
-    "target_spectrum":None,
-    "nclick-reset":None
-}
-
+parameters= reset_parameters(None)
 #generate equally separated points from 1THz to 5THz
 w=np.linspace(freq_low,freq_high,NUM_SPECTRA)
 
@@ -294,10 +268,29 @@ def mu_update_graph(selected_w0,selected_wp,selected_ws,selected_inf,nclick,rese
 @app.callback(Output(component_id='mu-button-content',component_property='children'), [Input('mu-add-button', 'n_clicks')])
 def mu_on_click(nclick):
     return html.Div(children=[f'MU #Lorentzians: ',html.Span(className='highlight',children=[f'{parameters["mu_num_lor"]}'])])
+    # return dashd.DangerouslySetInnerHTML(
+    #     f'''<div>&mu; #Lorentzians: <span class='highlight'>{parameters["mu_num_lor"]} <span> </div>'''
+    # )
 
 # #endregion#
 
 #region# ################### Main Plot/Load/Reset #########################
+@app.callback(
+    [Output('thickness-slider-content','children'),
+    Output('thickness-link','children')],
+    [Input(component_id='thickness-slider',component_property='value'),
+    Input('reset-link','children')]
+)
+def thickness_update(slider_value,resetlink):
+    if RESET:
+        parameters['thickness']=thickness
+        return_value = thickness
+    else:
+        parameters['thickness'] = slider_value
+        return_value = slider_value
+    
+    return f'Material Thickness: {return_value} nm','nonsense'
+
 @app.callback(
     [Output(component_id='n-graph',component_property='figure'),
     Output(component_id='z-graph',component_property='figure'),
@@ -305,13 +298,14 @@ def mu_on_click(nclick):
     
     [Input(component_id='epsilon-link',component_property='children'),
     Input(component_id='mu-link',component_property='children'),
-    Input(component_id='upload-link',component_property='children')]
+    Input(component_id='upload-link',component_property='children'),
+    Input(component_id='thickness-link',component_property='children')]
 )
-def display_update_graph(linktext1,linktext2,linktext3):
+def display_update_graph(linktext1,linktext2,linktext3,linktext4):
     c=3e-4
     e0=9.85e-12
     m0=4*np.pi*10**(-7)
-    d = 10e-6
+    d = parameters['thickness']*1e-6
     
     num_spectra=parameters['num_spectra'] #number of frequency points, which should be 2001
     
@@ -461,7 +455,21 @@ display_area_children=[
 ]
 
 main_area_children=[
-    dcc.Graph(id='T-graph',figure={})
+    dcc.Graph(id='T-graph',figure={}),
+    dcc.Slider(
+        id='thickness-slider',
+        min=thickness_low,
+        max=thickness_high,
+        step=thickness_step,
+        value=parameters['thickness'],
+        # updatemode='drag',
+        marks={
+            thickness_low:{"label":f"{thickness_low} ",'style': {'color': 'white'}},
+            thickness_high:{"label":f"{thickness_high} ",'style': {'color': 'white'}}
+        }
+    ),
+    html.Div(id='thickness-slider-content',children=[]),
+    html.Div(id='thickness-link',style={"display":"none"}),
 ]
 
 title_bar_children=[
@@ -469,6 +477,7 @@ title_bar_children=[
     
     html.H1(children=[html.Span("Juncheng",style={"text-decoration":"underline"}),"App"],style={"text-align":"center"}),
     reset_component,
+    # dashd.DangerouslySetInnerHTML('''<div>&#9211; </div>'''),
     html.Div(id='upload-link',style={"display":"none"}),
     html.Div(id='reset-link',style={"display":"none"})
 ]

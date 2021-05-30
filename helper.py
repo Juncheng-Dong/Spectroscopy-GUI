@@ -5,6 +5,8 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 
+from  dash_dangerously_set_inner_html import DangerouslySetInnerHTML as ori
+
 import pandas as pd
 import numpy as np
 import torch
@@ -29,7 +31,7 @@ def update_epsilon_slider(parameters):
 
 
     return [
-        html.Div(id='epsilon-w0-slider-content',className='slider-content',children=[f'w0: {selected_w0:.2f}']),
+        html.Div(id='epsilon-w0-slider-content',className='slider-content',children=['w',html.Sub('0'),f': {selected_w0:.2f}']),
         dcc.Slider(
             id='epsilon-w0-slider',
             min=w0_freq_low,
@@ -44,7 +46,7 @@ def update_epsilon_slider(parameters):
             # ,updatemode='drag'
         ),
         
-        html.Div(id='epsilon-wp-slider-content',className='slider-content',children=[f'wp: {selected_wp:.2f}']),
+        html.Div(id='epsilon-wp-slider-content',className='slider-content',children=['w',html.Sub('p'),f': {selected_wp:.2f}']),
         dcc.Slider(
             id='epsilon-wp-slider',
             min=wp_freq_low,
@@ -58,7 +60,7 @@ def update_epsilon_slider(parameters):
             }
         ),
         
-        html.Div(id='epsilon-ws-slider-content',className='slider-content',children=[f'ws: {selected_ws:.3f}']),
+        html.Div(id='epsilon-ws-slider-content',className='slider-content',children=['w',html.Sub('s'),f': {selected_ws:.3f}']),
         dcc.Slider(
             id='epsilon-ws-slider',
             min=ws_freq_low,
@@ -72,7 +74,7 @@ def update_epsilon_slider(parameters):
             }
         ),
         
-        html.Div(id='epsilon-inf-slider-content',className='slider-content',children=[f'inf: {selected_inf}']),
+        html.Div(id='epsilon-inf-slider-content',className='slider-content',children=[ori(f'&epsilon;<sub>&#8734;</sub>: {selected_inf:.1f}')]),
         dcc.Slider(
             id='epsilon-inf-slider',
             min=inf_low,
@@ -99,7 +101,7 @@ def update_mu_slider(parameters):
     selected_inf = parameters['mu']['inf']
 
     return [
-        html.Div(id='mu-w0-slider-content',className='slider-content',children=[f'w0: {selected_w0:.2f}'],style={"text-align":"center","font-size":"1.5em"}),
+        html.Div(id='mu-w0-slider-content',className='slider-content',children=['w',html.Sub('0'),f': {selected_w0:.2f}'],style={"text-align":"center","font-size":"1.5em"}),
         dcc.Slider(
             id='mu-w0-slider',
             min=w0_freq_low,
@@ -114,7 +116,7 @@ def update_mu_slider(parameters):
             # ,updatemode='drag'
         ),
         
-        html.Div(id='mu-wp-slider-content',className='slider-content',children=[f'wp: {selected_wp:.2f}'],style={"text-align":"center","font-size":"1.5em"}),
+        html.Div(id='mu-wp-slider-content',className='slider-content',children=['w',html.Sub('p'),f': {selected_wp:.2f}'],style={"text-align":"center","font-size":"1.5em"}),
         dcc.Slider(
             id='mu-wp-slider',
             min=wp_freq_low,
@@ -128,7 +130,7 @@ def update_mu_slider(parameters):
             }
         ),
         
-        html.Div(id='mu-ws-slider-content',className='slider-content',children=[f'ws: {selected_ws:.3f}'],style={"text-align":"center","font-size":"1.5em"}),
+        html.Div(id='mu-ws-slider-content',className='slider-content',children=['w',html.Sub('s'),f': {selected_ws:.3f}'],style={"text-align":"center","font-size":"1.5em"}),
         dcc.Slider(
             id='mu-ws-slider',
             min=ws_freq_low,
@@ -142,7 +144,7 @@ def update_mu_slider(parameters):
             }
         ),
         
-        html.Div(id='mu-inf-slider-content',className='slider-content',children=[f'inf: {selected_inf}'],style={"text-align":"center","font-size":"1.5em"}),
+        html.Div(id='mu-inf-slider-content',className='slider-content',children=[ori(f'&mu;<sub>&#8734;</sub>: {selected_inf:.1f}')],style={"text-align":"center","font-size":"1.5em"}),
         dcc.Slider(
             id='mu-inf-slider',
             min=inf_low,
@@ -265,7 +267,8 @@ def reset_parameters(reset_nclicks,old_parameters=None):
         "nclick-mu":nclick_mu,
         "num_spectra":NUM_SPECTRA,
         "target_spectrum":None,
-        "nclick-reset":reset_nclicks
+        "nclick-reset":reset_nclicks,
+        "thickness":thickness
     }
 
     return parameters

@@ -193,4 +193,17 @@ h3{
     color:lightblue;
     font-style: oblique;
 }
+#thickness-slider{
+    margin-top: 10px;
+}
+#thickness-slider-content{
+    color:white;
+    text-align: center;
+    font-size: 1em;
+    border:2px solid white;
+    border-radius: 10px;
+    padding:2px;
+    margin:-20px auto 10px;
+    width:300px;
 
+}

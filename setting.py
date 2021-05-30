@@ -22,3 +22,8 @@ inf_low=0
 inf_high=10
 inf_step=0.1
 
+#thickness measured in 1e-6 m
+thickness = 10
+thickness_low = 1
+thickness_high = 20
+thickness_step=1
