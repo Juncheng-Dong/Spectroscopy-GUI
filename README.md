@@ -19,7 +19,7 @@ This repository consists of a browser-based GUI that enables you to (features al
 5. Reset/Restart
 
 ## Quick Look of the GUI 
-
+![](Example.png)
 ## How-To-Use
 Usage is very simple. Download the repository. Run the GUI2.py file. Go to localhost:8050 on your brower.
 [TO DO: add in dependency]
