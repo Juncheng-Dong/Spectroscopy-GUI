@@ -13,10 +13,11 @@ to manually pick a good initialization
 ## A GUI that Interacts
 This repository consists of a browser-based GUI that enables you to (features already implemented)
 1. Import file of target spectrum T
-2. Add arbitary number of Lorentizans for EPSILON and MU
-3. Interact with Lorentzian parameters by sliders 
-4. Rerender the fitting result when you are interacting with the parameters
-5. Reset/Restart
+2. Alternating the meta-material thickness
+3. Add arbitary number of Lorentizans for EPSILON and MU
+4. Interact with Lorentzian parameters by sliders 
+5. Rerender the fitting result when you are interacting with the parameters
+6. Reset/Restart
 
 ## Quick Look of the GUI 
 ![](Example.png)
